@@ -1,7 +1,7 @@
 # You know, there are pre-compile DEBs of this...
 
 CXX ?= g++
-CXXFLAGS ?= -O2 -Wall -DSHORT_NAME
+CXXFLAGS += -O2 -Wall -DSHORT_NAME
 LDFLAGS += -Wl,-Bsymbolic-functions
 
 GASIA_GAMEPAD_HACKS = false # Set to 'true' to enable hacks
