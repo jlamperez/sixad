@@ -47,6 +47,7 @@ install:
 	install -m 755 bins/sixad-3in1 $(DESTDIR)/usr/sbin/
 	install -m 755 bins/sixad-raw $(DESTDIR)/usr/sbin/
 	install -m 755 bins/sixpair $(DESTDIR)/usr/sbin/
+	install -m 644 default $(DESTDIR)/var/lib/sixad/profiles/
 
 	@chmod 777 -R $(DESTDIR)/var/lib/sixad/
 	@echo "Installation is Complete!"
