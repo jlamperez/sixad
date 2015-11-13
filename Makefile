@@ -4,10 +4,12 @@ CXX ?= g++
 CXXFLAGS += -O2 -Wall -DSHORT_NAME
 LDFLAGS += -Wl,-Bsymbolic-functions
 
-GASIA_GAMEPAD_HACKS = false # Set to 'true' to enable hacks
-
-ifeq ($(GASIA_GAMEPAD_HACKS),true)
+ifeq ($(GASIA_GAMEPAD_HACKS),"On")
 CXXFLAGS += -DGASIA_GAMEPAD_HACKS
+endif
+
+ifeq ($(DEVICE_SHORT_NAME),"On")
+CXXFLAGS += -DSHORT_NAME
 endif
 
 all: sixad_bins sixpair_bin
