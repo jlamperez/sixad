@@ -65,9 +65,13 @@ struct uinput_fd *uinput_open(int DEV_TYPE, const char *mac, struct device_setti
     memset(&dev_mk, 0, sizeof(dev_mk));
 
     if (DEV_TYPE == DEV_TYPE_SIXAXIS) {
+#ifndef SHORT_NAME
         strcpy(dev_name, "PLAYSTATION(R)3 Controller (");
         strcat(dev_name, mac);
         strcat(dev_name, ")");
+#else
+        strcpy(dev_name, "PLAYSTATION(R)3 Controller");
+#endif
         snprintf(dev.name, sizeof(dev.name), "%s", dev_name);
         dev.id.vendor = 0x054c;
         dev.id.product = 0x0268;
