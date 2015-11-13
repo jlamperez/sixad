@@ -58,4 +58,5 @@ uninstall:
 	rm -f $(DESTDIR)/usr/sbin/sixad-sixaxis
 	rm -f $(DESTDIR)/usr/sbin/sixad-remote
 	rm -f $(DESTDIR)/usr/sbin/sixad-raw
+	rm -f $(DESTDIR)/usr/sbin/sixpair
 	rm -rf $(DESTDIR)/var/lib/sixad/
