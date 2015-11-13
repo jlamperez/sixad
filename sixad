@@ -35,6 +35,11 @@ if (which hciconfig > /dev/null); then
 fi
 }
 
+bt_device_enable () {
+hciconfig device up
+hciconfig device pscan
+}
+
 sixad_running_check () {
 ps -e | grep sixad-bin > /dev/null
 }
@@ -99,6 +104,7 @@ bt_start
   --remote|-remote|remote)
 REMOTE=1
 bt_device_check
+bt_device_enable
 if (modprobe_check); then  #Check for root access before running, If NO access, quit
   bt_start_and_stop
   $SUDO /usr/sbin/sixad-bin $DEBUG $LEGACY $REMOTE
