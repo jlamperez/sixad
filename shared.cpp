@@ -280,7 +280,6 @@ void enable_sixaxis(int csk)
         0x53, /* HIDP_TRANS_SET_REPORT | HIDP_DATA_RTYPE_FEATURE */
         0xf4, 0x42, 0x03, 0x00, 0x00
     };
-#endif
 
     send(csk, enable_orig, sizeof(enable_orig), 0);
     send(csk, enable_gasia, sizeof(enable_gasia), 0);
