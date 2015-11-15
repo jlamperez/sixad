@@ -100,6 +100,8 @@ void process_device(int argc, char **argv, struct usb_device *dev,
     
   set_master(devh, itfnum, mac);
 
+  usb_reset(devh);
+  usb_release_interface(devh, itfnum);
   usb_close(devh);
 }
 
@@ -145,8 +147,6 @@ int main(int argc, char *argv[]) {
     printf("No controller found on USB busses. Please connect your joystick via USB.\n");
     return 1;
   }
-
   return 0;
-
 }
 
