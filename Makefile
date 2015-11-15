@@ -1,14 +1,14 @@
 # You know, there are pre-compile DEBs of this...
 
 CXX ?= g++
-CXXFLAGS += -O2 -Wall -DSHORT_NAME
+CXXFLAGS += -O2 -Wall 
 LDFLAGS += -Wl,-Bsymbolic-functions
 
-ifeq ($(GASIA_GAMEPAD_HACKS),"On")
+ifeq ($(GASIA_GAMEPAD_HACKS),1)
 CXXFLAGS += -DGASIA_GAMEPAD_HACKS
 endif
 
-ifeq ($(DEVICE_SHORT_NAME),"On")
+ifeq ($(DEVICE_SHORT_NAME),1)
 CXXFLAGS += -DSHORT_NAME
 endif
 
@@ -51,7 +51,7 @@ install:
 	install -m 755 sixad-helper $(DESTDIR)/usr/sbin/
 	install -m 644 99-sixad.rules $(DESTDIR)/etc/udev/rules.d
 	install -m 644 10-hci.rules $(DESTDIR)/etc/udev/rules.d
-	
+
 	@chmod 777 -R $(DESTDIR)/var/lib/sixad/
 	@echo "Installation is Complete!"
 
