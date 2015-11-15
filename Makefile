@@ -48,7 +48,10 @@ install:
 	install -m 755 bins/sixad-raw $(DESTDIR)/usr/sbin/
 	install -m 755 bins/sixpair $(DESTDIR)/usr/sbin/
 	install -m 644 default $(DESTDIR)/var/lib/sixad/profiles/
-
+	install -m 755 sixad-helper $(DESTDIR)/usr/sbin/
+	install -m 644 99-sixad.rules $(DESTDIR)/etc/udev/rules.d
+	install -m 644 10-hci.rules $(DESTDIR)/etc/udev/rules.d
+	
 	@chmod 777 -R $(DESTDIR)/var/lib/sixad/
 	@echo "Installation is Complete!"
 
@@ -63,4 +66,7 @@ uninstall:
 	rm -f $(DESTDIR)/usr/sbin/sixad-3in1
 	rm -f $(DESTDIR)/usr/sbin/sixad-raw
 	rm -f $(DESTDIR)/usr/sbin/sixpair
+	rm -f $(DESTDIR)/usr/sbin/sixad-helper
+	rm -f $(DESTDIR)/etc/udev/rules.d/99-sixad.rules
+	rm -f $(DESTDIR)/etc/udev/rules.d/10-hci.rules
 	rm -rf $(DESTDIR)/var/lib/sixad/
