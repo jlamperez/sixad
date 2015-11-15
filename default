@@ -14,3 +14,4 @@ enable_accel 0
 enable_accon 0
 enable_speed 0
 enable_pos 0
+enable_safety_timeout 0
