@@ -81,6 +81,7 @@ case $1 in
   --start|-start|start|-s)
 REMOTE=0
 bt_device_check
+bt_device_enable 
 if (sixad_running_check); then
   echo "sixad is already running."
   echo "run '$0 --stop' to stop it"
