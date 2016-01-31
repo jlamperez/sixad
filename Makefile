@@ -51,6 +51,13 @@ install:
 	install -m 755 sixad-helper $(DESTDIR)/usr/sbin/
 	install -m 644 99-sixad.rules $(DESTDIR)/etc/udev/rules.d
 	install -m 644 10-hci.rules $(DESTDIR)/etc/udev/rules.d
+	install -m 755 sixad-dbus-blocker $(DESTDIR)/usr/sbin/
+
+ifeq "$(wildcard /usr/bin/python2 )" ""
+else
+	# Python2 force
+	sed -i "s/env python/env python2/" $(DESTDIR)/usr/sbin/sixad-dbus-blocker
+endif
 
 	@chmod 777 -R $(DESTDIR)/var/lib/sixad/
 	@echo "Installation is Complete!"
@@ -69,4 +76,5 @@ uninstall:
 	rm -f $(DESTDIR)/usr/sbin/sixad-helper
 	rm -f $(DESTDIR)/etc/udev/rules.d/99-sixad.rules
 	rm -f $(DESTDIR)/etc/udev/rules.d/10-hci.rules
+	rm -f $(DESTDIR)/usr/sbin/sixad-dbus-blocker
 	rm -rf $(DESTDIR)/var/lib/sixad/
