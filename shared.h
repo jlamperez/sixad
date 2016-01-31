@@ -61,18 +61,19 @@ struct dev_rumble {
     bool old_mode;
 };
 
-struct dev_safety_timeout {
+struct dev_timeout {
     bool enabled;
-    int timeout_ms;
+    int timeout;
 };
 
 struct device_settings {
+    bool auto_disconnect;
     struct dev_led led;
     struct dev_joystick joystick;
     struct dev_remote remote;
     struct dev_input input;
     struct dev_rumble rumble;
-    struct dev_safety_timeout safety_timeout;
+    struct dev_timeout timeout;
 };
 
 bool was_active();

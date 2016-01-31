@@ -118,8 +118,10 @@ struct device_settings init_values(const char *addr)
         settings.rumble.enabled = textfile_get_int(pathname, "enable_rumble", 1);
         settings.rumble.old_mode = textfile_get_int(pathname, "old_rumble_mode", 0);
 
-        settings.safety_timeout.enabled = textfile_get_int(pathname, "enable_safety_timeout", 1);
-        settings.safety_timeout.timeout_ms = textfile_get_int(pathname, "safety_timeout_ms", 250);
+        settings.timeout.enabled = textfile_get_int(pathname, "enable_timeout", 1);
+        settings.timeout.timeout = textfile_get_int(pathname, "timeout_mins", 30);
+
+        settings.auto_disconnect = (bool)textfile_get_int(pathname, "out_of_reach_disconnects", 0);
 
     } else if (open("/var/lib/sixad/profiles/default", O_RDONLY) > 0) { //default config
         strcpy(pathname, "/var/lib/sixad/profiles/default");
@@ -178,8 +180,11 @@ struct device_settings init_values(const char *addr)
         settings.rumble.enabled = textfile_get_int(pathname, "enable_rumble", 1);
         settings.rumble.old_mode = textfile_get_int(pathname, "old_rumble_mode", 0);
 
-        settings.safety_timeout.enabled = textfile_get_int(pathname, "enable_safety_timeout", 1);
-        settings.safety_timeout.timeout_ms = textfile_get_int(pathname, "safety_timeout_ms", 250);
+        settings.timeout.enabled = textfile_get_int(pathname, "enable_timeout", 1);
+        settings.timeout.timeout = textfile_get_int(pathname, "timeout_mins", 30);
+
+        settings.auto_disconnect = (bool)textfile_get_int(pathname, "out_of_reach_disconnects", 0);
+
     } else { // no config
 
         settings.led.enabled = 1;
@@ -236,8 +241,10 @@ struct device_settings init_values(const char *addr)
         settings.rumble.enabled = 1;
         settings.rumble.old_mode = 0;
 
-        settings.safety_timeout.enabled = 1;
-        settings.safety_timeout.timeout_ms = 250;
+        settings.timeout.enabled = 1;
+        settings.timeout.timeout = 30;
+
+        settings.auto_disconnect = false;
     }
 
     return settings;
@@ -261,8 +268,7 @@ int get_joystick_number()
 
 void enable_sixaxis(int csk)
 {
-#ifdef GASIA_GAMEPAD_HACKS
-    unsigned char enable[] = {
+    unsigned char enable_gasia[] = {
         0xA2,
         0x01,
         0x00, 0x00, 0x00, 0x00, 0x00,   // rumble values [0x00, right-timeout, right-force, left-timeout, left-force]
@@ -276,17 +282,12 @@ void enable_sixaxis(int csk)
         0x00, 0x00, 0x00, 0x00, 0x00,
         0x00, 0x00, 0x00
     };
-#else
-    char buf[128];
-    unsigned char enable[] = {
+
+    unsigned char enable_orig[] = {
         0x53, /* HIDP_TRANS_SET_REPORT | HIDP_DATA_RTYPE_FEATURE */
         0xf4, 0x42, 0x03, 0x00, 0x00
     };
-#endif
 
-    /* enable reporting */
-    send(csk, enable, sizeof(enable), 0);
-#ifndef GASIA_GAMEPAD_HACKS
-    recv(csk, buf, sizeof(buf), 0);
-#endif
+    send(csk, enable_orig, sizeof(enable_orig), 0);
+    send(csk, enable_gasia, sizeof(enable_gasia), 0);
 }
