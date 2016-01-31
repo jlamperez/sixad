@@ -137,6 +137,11 @@ void do_joystick(int fd, unsigned char* buf, struct dev_joystick joystick)
     if (velX > -30 && velX < 30) velX = 0;
     if (velY > -30 && velY < 30) velY = 0;
     if (velZ > -30 && velZ < 30) velZ = 0;
+    //min value is -127
+    if (lx < -127) lx = -127;
+    if (ly < -127) ly = -127;
+    if (rx < -127) rx = -127;
+    if (ry < -127) ry = -127;
 
     if (joystick.buttons) {
         //part1
@@ -254,6 +259,11 @@ void do_input(int fd, unsigned char* buf, struct dev_input input)
     if (ly > -10 && ly < 10) ly = 0;
     if (rx > -11 && rx < 11) rx = 0;
     if (ry > -11 && ry < 11) ry = 0;
+    //min value is -127
+    if (lx < -127) lx = -127;
+    if (ly < -127) ly = -127;
+    if (rx < -127) rx = -127;
+    if (ry < -127) ry = -127;
 
     //lr3 enable/disable
     if ((b1 & SIXAXIS_KEY_L3) && b1 != last_b1)
