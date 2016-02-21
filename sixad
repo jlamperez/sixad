@@ -36,8 +36,8 @@ fi
 }
 
 bt_device_enable () {
-hciconfig device up
-hciconfig device pscan
+hciconfig hci0 up
+hciconfig hci0 pscan
 }
 
 sixad_running_check () {
