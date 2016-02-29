@@ -76,23 +76,45 @@ env sleep 2
 bt_stop
 }
 
+sixad_watch (){
+    echo "Watching... (10s)"
+    while (true); do
+        if (! hciconfig dev &> /dev/null); then
+            echo "Bluetooth Disconnected, killing sixad."
+            $SUDO pkill -KILL sixad-sixaxis
+            $SUDO pkill -KILL sixad-remote
+            $SUDO pkill -TERM sixad-bin
+            bt_start
+            sixad_start
+        fi
+        sleep 10;
+    done
+}
+
+sixad_start () {
+    REMOTE=0
+    bt_device_check
+    bt_device_enable 
+    if (sixad_running_check); then
+        echo "sixad is already running."
+        echo "run '$0 --stop' to stop it"
+    else
+        if (modprobe_check); then  #Check for root access before running, If NO access, quit
+            bt_start_and_stop
+            env sleep 1
+            $SUDO /usr/sbin/sixad-bin $DEBUG $LEGACY $REMOTE &
+            env sleep 2
+            sixad_watch
+        else
+            echo "You need admin/root access to run this application"
+        fi
+    fi
+}
+
 case $1 in
 
   --start|-start|start|-s)
-REMOTE=0
-bt_device_check
-bt_device_enable 
-if (sixad_running_check); then
-  echo "sixad is already running."
-  echo "run '$0 --stop' to stop it"
-else
- if (modprobe_check); then  #Check for root access before running, If NO access, quit
-  bt_start_and_stop
-  $SUDO /usr/sbin/sixad-bin $DEBUG $LEGACY $REMOTE
- else
-  echo "You need admin/root access to run this application"
- fi
-fi
+sixad_start
   ;;
 
   --stop|-stop|stop)
