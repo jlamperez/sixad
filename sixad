@@ -2,6 +2,7 @@
 
 # sixad-bin wrapper
 # written by falkTX
+# modified by Dark-Show
 
 DEBUG=0
 LEGACY=0
@@ -16,6 +17,13 @@ if [ -f /usr/bin/sudo ]; then
 else
   SUDO=""
 fi
+
+bt_device_checkr() {
+if (! hciconfig dev &> /dev/null); then
+    return 0;
+fi
+return 1;
+}
 
 bt_device_check () {
 if (which hciconfig > /dev/null); then
@@ -78,18 +86,23 @@ env sleep 2
 bt_stop
 }
 
-sixad_watch (){
-    echo "Watching... (10s)"
+sixad_watchdog (){
+    echo "Watching... (5s)"
     while (true); do
-        if (! hciconfig dev &> /dev/null); then
-            echo "Bluetooth Disconnected, killing sixad."
+        if (bt_device_checkr); then
+            echo "Watchdog: Bluetooth disconnected, killing sixad."
             $SUDO pkill -KILL sixad-sixaxis
             $SUDO pkill -KILL sixad-remote
             $SUDO pkill -TERM sixad-bin
             bt_start
             sixad_start
+        else
+            if (hciconfig hci0 | grep "DOWN" &> /dev/null); then
+            echo "Watchdog: hci0 down, re-enabling."
+                bt_device_enable
+            fi
         fi
-        sleep 10;
+        sleep 5;
     done
 }
 
@@ -106,7 +119,7 @@ sixad_start () {
             env sleep 1
             $SUDO /usr/sbin/sixad-bin $DEBUG $LEGACY $REMOTE &
             env sleep 2
-            sixad_watch
+            sixad_watchdog
         else
             echo "You need admin/root access to run this application"
         fi
@@ -135,6 +148,8 @@ bt_device_enable
 if (modprobe_check); then  #Check for root access before running, If NO access, quit
   bt_start_and_stop
   $SUDO /usr/sbin/sixad-bin $DEBUG $LEGACY $REMOTE
+  env sleep 2
+  sixad_watchdog
 else
   echo "You need admin/root access to run this application"
 fi
