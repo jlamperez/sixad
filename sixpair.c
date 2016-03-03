@@ -133,7 +133,7 @@ int main(int argc, char *argv[]) {
 		++alt ) {
 	    if ( dev->descriptor.idVendor == VENDOR &&
 		 (dev->descriptor.idProduct == PRODUCT_SIXAXIS ||
-		  dev->descriptor.idProduct == PRODUCT_NAVIGATION) ||
+		  dev->descriptor.idProduct == PRODUCT_NAVIGATION ||
 		  dev->descriptor.idProduct == PRODUCT_DS4) &&
 		 alt->bInterfaceClass == 3 ) {
 	      process_device(argc, argv, dev, cfg, itfnum);
