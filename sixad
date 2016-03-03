@@ -109,7 +109,6 @@ sixad_watchdog (){
 sixad_start () {
     REMOTE=0
     bt_device_check
-    bt_device_enable 
     if (sixad_running_check); then
         echo "sixad is already running."
         echo "run '$0 --stop' to stop it"
@@ -124,6 +123,7 @@ sixad_start () {
             echo "You need admin/root access to run this application"
         fi
     fi
+    bt_device_enable 
 }
 
 case $1 in
@@ -144,7 +144,6 @@ $SUDO pkill -TERM sixad
   --remote|-remote|remote)
 REMOTE=1
 bt_device_check
-bt_device_enable
 if (modprobe_check); then  #Check for root access before running, If NO access, quit
   bt_start_and_stop
   $SUDO /usr/sbin/sixad-bin $DEBUG $LEGACY $REMOTE
@@ -153,6 +152,7 @@ if (modprobe_check); then  #Check for root access before running, If NO access, 
 else
   echo "You need admin/root access to run this application"
 fi
+bt_device_enable
   ;;
 
   --restore|-restore|restore|-r)
