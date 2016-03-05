@@ -115,7 +115,7 @@ sixad_start () {
     else
         if (modprobe_check); then  #Check for root access before running, If NO access, quit
             bt_start_and_stop
-            env sleep 1
+            env sleep 5
             bt_device_enable 
             $SUDO /usr/sbin/sixad-bin $DEBUG $LEGACY $REMOTE &
             env sleep 2
