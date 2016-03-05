@@ -46,8 +46,8 @@ fi
 }
 
 bt_device_enable () {
-hciconfig hci0 up
-hciconfig hci0 pscan
+$SUDO hciconfig hci0 up
+$SUDO hciconfig hci0 pscan
 }
 
 sixad_running_check () {
@@ -116,6 +116,7 @@ sixad_start () {
         if (modprobe_check); then  #Check for root access before running, If NO access, quit
             bt_start_and_stop
             env sleep 1
+            bt_device_enable 
             $SUDO /usr/sbin/sixad-bin $DEBUG $LEGACY $REMOTE &
             env sleep 2
             sixad_watchdog
@@ -123,7 +124,6 @@ sixad_start () {
             echo "You need admin/root access to run this application"
         fi
     fi
-    bt_device_enable 
 }
 
 case $1 in
@@ -146,13 +146,14 @@ REMOTE=1
 bt_device_check
 if (modprobe_check); then  #Check for root access before running, If NO access, quit
   bt_start_and_stop
+  env sleep 1
+  bt_device_enable
   $SUDO /usr/sbin/sixad-bin $DEBUG $LEGACY $REMOTE
   env sleep 2
   sixad_watchdog
 else
   echo "You need admin/root access to run this application"
 fi
-bt_device_enable
   ;;
 
   --restore|-restore|restore|-r)
