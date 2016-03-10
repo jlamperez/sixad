@@ -42,20 +42,11 @@ if (which hciconfig > /dev/null); then
     echo "You're using a _really_ old bluetooth dongle,"
     echo "the Sixaxis will just not work!"
   fi
-  bt_device_enable
 fi
 }
 
 bt_device_enable () {
-bt_device_up
-bt_device_pscan
-}
-
-bt_device_up () {
 hciconfig hci0 up
-}
-
-bt_device_pscan () {
 hciconfig hci0 pscan
 }
 
@@ -103,45 +94,42 @@ sixad_watchdog (){
             $SUDO pkill -KILL sixad-sixaxis
             $SUDO pkill -KILL sixad-remote
             $SUDO pkill -TERM sixad-bin
-            break
-        fi
-        if (hciconfig hci0 | grep "DOWN" &> /dev/null); then
-          echo "Watchdog: hci0 down, re-enabling."
-          bt_device_up
-        fi
-        if ! (hciconfig hci0 | grep "PSCAN" &> /dev/null); then
-         bt_device_pscan
+            bt_start
+            sixad_start
+        else
+            if (hciconfig hci0 | grep "DOWN" &> /dev/null); then
+            echo "Watchdog: hci0 down, re-enabling."
+                bt_device_enable
+            fi
         fi
         sleep 5;
     done
-    sixad_start
 }
 
 sixad_start () {
+    REMOTE=0
     bt_device_check
-    bt_start_and_stop
-    env sleep 1
-    $SUDO /usr/sbin/sixad-bin $DEBUG $LEGACY $REMOTE &
-    env sleep 2
-    bt_device_enable
-    sixad_watchdog
+    if (sixad_running_check); then
+        echo "sixad is already running."
+        echo "run '$0 --stop' to stop it"
+    else
+        if (modprobe_check); then  #Check for root access before running, If NO access, quit
+            bt_start_and_stop
+            env sleep 1
+            $SUDO /usr/sbin/sixad-bin $DEBUG $LEGACY $REMOTE &
+            env sleep 2
+            sixad_watchdog
+        else
+            echo "You need admin/root access to run this application"
+        fi
+    fi
+    bt_device_enable 
 }
 
 case $1 in
+
   --start|-start|start|-s)
-#boot error fix attempt.
-REMOTE=0
-bt_device_check
-if (sixad_running_check); then
-  echo "sixad is already running."
-  echo "run '$0 --stop' to stop it"
-else
-  if (modprobe_check); then  #Check for root access before running, If NO access, quit
-    sixad_start
-  else
-    echo "You need admin/root access to run this application"
-  fi
-fi
+sixad_start
   ;;
 
   --stop|-stop|stop)
@@ -164,6 +152,7 @@ if (modprobe_check); then  #Check for root access before running, If NO access, 
 else
   echo "You need admin/root access to run this application"
 fi
+bt_device_enable
   ;;
 
   --restore|-restore|restore|-r)
