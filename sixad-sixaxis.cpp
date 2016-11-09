@@ -386,11 +386,10 @@ int main(int argc, char *argv[])
     
     delete ufd;
 
-    shutdown(isk, SHUT_RDWR); // Shutdown Interupt socket.
-    usleep(1000); // Wait for buffer clear?
-    close(csk, SHUT_RDWR); // Close socket.
+    shutdown(isk, SHUT_RDWR);
+    shutdown(csk, SHUT_RDWR);
 
     syslog(LOG_INFO, "Disconnected \"%s\"", mac);
-    sig_term(0);
+
     return 0;
 }
