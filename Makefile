@@ -27,14 +27,14 @@ clean:
 
 install:
 	install -d $(DESTDIR)/etc/default/
-	install -d $(DESTDIR)/etc/init.d/
+	install -d $(DESTDIR)/etc/systemd/system/
 	install -d $(DESTDIR)/etc/logrotate.d/
 	install -d $(DESTDIR)/usr/bin/
 	install -d $(DESTDIR)/usr/sbin/
 	install -d $(DESTDIR)/var/lib/sixad/
 	install -d $(DESTDIR)/var/lib/sixad/profiles/
 	install -m 644 sixad.default $(DESTDIR)/etc/default/sixad
-	install -m 755 sixad.init $(DESTDIR)/etc/init.d/sixad
+	install -m 644 sixad.service $(DESTDIR)/etc/systemd/system/
 	install -m 644 sixad.log $(DESTDIR)/etc/logrotate.d/sixad
 	install -m 755 sixad $(DESTDIR)/usr/bin/
 	install -m 755 bins/sixad-bin $(DESTDIR)/usr/sbin/
@@ -53,7 +53,7 @@ install:
 
 uninstall:
 	rm -f $(DESTDIR)/etc/default/sixad
-	rm -f $(DESTDIR)/etc/init.d/sixad
+	rm -f $(DESTDIR)/etc/systemd/system/sixad.service
 	rm -f $(DESTDIR)/etc/logrotate.d/sixad
 	rm -f $(DESTDIR)/usr/bin/sixad
 	rm -f $(DESTDIR)/usr/sbin/sixad-bin
