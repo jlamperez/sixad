@@ -37,6 +37,7 @@ install:
 	install -d $(DESTDIR)/usr/sbin/
 	install -d $(DESTDIR)/var/lib/sixad/
 	install -d $(DESTDIR)/var/lib/sixad/profiles/
+	install -d $(DESTDIR)/etc/udev/rules.d/
 	install -m 644 sixad.default $(DESTDIR)/etc/default/sixad
 	install -m 644 sixad.service $(DESTDIR)/etc/systemd/system/
 	install -m 644 sixad.log $(DESTDIR)/etc/logrotate.d/sixad
